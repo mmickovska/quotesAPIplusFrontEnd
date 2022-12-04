@@ -9,7 +9,9 @@ api.use(express.urlencoded({ extended: false }));
 
 api.get('/quotes', async (req, res) => {
     try {
-        const quotes = await Quotes.find({}).limit(10);
+        const quotesCount = await Quotes.count();
+        let random = Math.floor(Math.random() * (quotesCount - 10));
+        const quotes = await Quotes.find({}).skip(random).limit(10);
         res.json(quotes);
     } catch (err) {
         return res.status(500).send('Error');
